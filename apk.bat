@@ -1,0 +1,1 @@
+deepclean.bat && flutter build apk --release

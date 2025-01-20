@@ -1,0 +1,1 @@
+flutter clean && cd android && gradlew --stop && gradlew clean && cd .. && flutter pub get && dart update_iss.dart

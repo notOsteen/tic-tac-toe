@@ -1,0 +1,28 @@
+package_rename_config:
+  android:
+    app_name: "Tic Tac Toe"
+    package_name: "com.tictac.toe"
+
+  ios:
+    app_name: "Tic Tac Toe"
+    bundle_name: "com.tictac.toe"
+    package_name: "com.tictac.toe"
+
+  # linux:
+  #   app_name: "Tic Tac Toe"
+  #   package_name: "com.tictac.toe"
+  #   exe_name: "tictac_toe"
+
+  # macos:
+  #   app_name: "Tic Tac Toe"
+  #   package_name: "com.tictac.toe"
+
+  web:
+    app_name: "Tic Tac Toe"
+    short_app_name: "Tic Tac Toe"
+    description: "A classic Tic Tac Toe game, enjoy with your friends!"
+
+  windows:
+    app_name: "Tic Tac Toe"
+    organization: "Tic Tac Toe Inc."
+    exe_name: "tictac_toe"

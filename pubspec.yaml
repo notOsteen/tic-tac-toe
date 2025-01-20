@@ -1,0 +1,29 @@
+name: tic_tac
+description: "A new Flutter project."
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  confetti: ^0.8.0
+  cupertino_icons: ^1.0.8
+  flutter:
+    sdk: flutter
+  flutter_launcher_icons: ^0.14.3
+  get: ^4.6.6
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+  flutter_test:
+    sdk: flutter
+  package_rename: ^1.8.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/

@@ -9,6 +9,10 @@ class TicTacToeController extends GetxController {
   var playerXName = 'Player X';
   var playerOName = 'Bot';
   var isBotPlaying = true;
+  var isBotThinking = false;
+  var playerXUndoUsed = false.obs;
+  var playerOUndoUsed = false.obs;
+  List<List<String>> previousBoardState = [];
 
   static const List<List<int>> winPatterns = [
     [0, 1, 2],
@@ -21,11 +25,43 @@ class TicTacToeController extends GetxController {
     [2, 4, 6]
   ];
 
-  bool isBotThinking = false;
+  Future<void> useUndo() async {
+    if (isBotPlaying && isBotThinking) {
+      Get.snackbar(
+          'Undo Disabled', 'You cannot undo while the bot is playing!');
+      return;
+    }
+
+    if ((currentPlayer.value == 'X' && playerXUndoUsed.value) ||
+        (currentPlayer.value == 'O' && playerOUndoUsed.value)) {
+      String playerName =
+          currentPlayer.value == 'X' ? playerXName : playerOName;
+      Get.snackbar('Undo Disabled', '$playerName has already used undo.');
+      return;
+    }
+
+    if (currentPlayer.value == 'X') {
+      playerXUndoUsed.value = true;
+    } else {
+      playerOUndoUsed.value = true;
+    }
+
+    if (previousBoardState.isNotEmpty) {
+      board.value = previousBoardState.last;
+      previousBoardState.removeLast();
+
+      currentPlayer.value = currentPlayer.value == 'X' ? 'O' : 'X';
+
+      update();
+    } else {
+      Get.snackbar('No Moves to Undo', 'There is no previous move to undo.');
+    }
+  }
 
   void handleTap(int index) async {
     if (!isBotPlaying || !isBotThinking) {
       if (board[index].isEmpty && winner.value == null) {
+        previousBoardState.add(List.from(board));
         board[index] = currentPlayer.value;
         if (checkWinner(currentPlayer.value)) {
           winner.value = currentPlayer.value;
@@ -133,11 +169,15 @@ class TicTacToeController extends GetxController {
     return null;
   }
 
-  void resetGame() {
+  void resetGame(BuildContext context) {
     board.value = List.generate(9, (_) => '');
     currentPlayer.value = 'X';
     winner.value = null;
+    previousBoardState.clear();
+    playerXUndoUsed = false.obs;
+    playerOUndoUsed = false.obs;
     update();
+    showPlayerNameDialog(context);
   }
 
   void showPlayerNameDialog(BuildContext context) {

@@ -145,9 +145,17 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          onPressed: controller.resetGame,
+                          onPressed: () => controller.resetGame(context),
                           child: const Text('Restart Game'),
                         ),
+                        if (!controller.isBotPlaying ||
+                            !controller.isBotThinking) ...[
+                          const SizedBox(width: 16),
+                          ElevatedButton(
+                            onPressed: controller.useUndo,
+                            child: const Text('Undo'),
+                          ),
+                        ],
                       ],
                     ),
                   ],

@@ -1,16 +1,10 @@
-# tic_tac
+# Tic-Tac-Toe with Undo Functionality - Flutter
 
-A new Flutter project.
+A modern Tic-Tac-Toe game built using Flutter and GetX state management, featuring an intuitive interface and undo functionality to allow players to go back to their previous moves.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Simple Gameplay**: Classic 3x3 grid Tic-Tac-Toe with X and O markers.
+- **Undo Functionality**: Ability to undo the last move made by the player.
+- **State Management with GetX**: Clean and efficient state management using GetX for responsive updates.
+- **Modern UI**: A minimal and modern design with smooth animations.

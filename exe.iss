@@ -4,7 +4,7 @@
 
 [Setup]
 AppName={#AppName}
-AppVersion=1.0.0+1
+AppVersion=2.0.0+2
 DefaultDirName={autopf}\{#AppName}
 DefaultGroupName={#AppName}
 OutputBaseFilename={#AppName}_Setup

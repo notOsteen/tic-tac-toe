@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:io' show Platform;
 import 'package:confetti/confetti.dart';
 import 'package:tic_tac/controller/tic_tac_toe.dart';
 
@@ -31,7 +30,6 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDesktop = Platform.isMacOS || Platform.isWindows || Platform.isLinux;
     return GetBuilder<TicTacToeController>(
       builder: (controller) {
         if (controller.winner.value != null) {
@@ -144,20 +142,12 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
                       ),
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
                           onPressed: controller.resetGame,
                           child: const Text('Restart Game'),
                         ),
-                        if (isDesktop)
-                          Text(
-                            'Use Mouse Clicks to Play',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.grey[700],
-                            ),
-                          ),
                       ],
                     ),
                   ],

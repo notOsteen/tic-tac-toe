@@ -1,100 +1,136 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tic_tac/widgets/popup.dart';
 
 class TicTacToeController extends GetxController {
   var board = List.generate(9, (_) => '').obs;
   var currentPlayer = 'X'.obs;
   var winner = RxnString();
   var playerXName = 'Player X';
-  var playerOName = 'Player O';
+  var playerOName = 'Bot';
+  var isBotPlaying = true;
 
-  void handleTap(int index) {
-    if (board[index].isEmpty && winner.value == null) {
-      board[index] = currentPlayer.value;
-      if (checkWinner()) {
-        winner.value = currentPlayer.value;
-      } else if (!board.contains('')) {
-        winner.value = 'Draw';
-      } else {
-        currentPlayer.value = currentPlayer.value == 'X' ? 'O' : 'X';
+  static const List<List<int>> winPatterns = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+
+  bool isBotThinking = false;
+
+  void handleTap(int index) async {
+    if (!isBotPlaying || !isBotThinking) {
+      if (board[index].isEmpty && winner.value == null) {
+        board[index] = currentPlayer.value;
+        if (checkWinner(currentPlayer.value)) {
+          winner.value = currentPlayer.value;
+        } else if (!board.contains('')) {
+          winner.value = 'Draw';
+        } else {
+          currentPlayer.value = currentPlayer.value == 'X' ? 'O' : 'X';
+          if (isBotPlaying && currentPlayer.value == 'O') {
+            isBotThinking = true;
+            await botMove();
+            isBotThinking = false;
+          }
+        }
       }
+      update();
     }
-    update();
   }
 
-  bool checkWinner() {
-    const List<List<int>> winPatterns = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6]
-    ];
-    for (var pattern in winPatterns) {
-      if (board[pattern[0]] == currentPlayer.value &&
-          board[pattern[1]] == currentPlayer.value &&
-          board[pattern[2]] == currentPlayer.value) {
-        return true;
-      }
-    }
-    return false;
+  bool checkWinner(String player) {
+    return winPatterns
+        .any((pattern) => pattern.every((index) => board[index] == player));
   }
 
-  void setPlayerNames(String xName, String oName) {
-    playerXName = xName;
-    playerOName = oName;
-    update();
-  }
-
-  void showPlayerNameDialog(BuildContext context) {
-    final controller = Get.find<TicTacToeController>();
-    String playerXName = '';
-    String playerOName = '';
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Enter Player Names'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: const InputDecoration(labelText: 'Player X Name'),
-                keyboardType: TextInputType.name,
-                onChanged: (value) => playerXName = value,
-              ),
-              TextField(
-                decoration: const InputDecoration(labelText: 'Player O Name'),
-                keyboardType: TextInputType.name,
-                onChanged: (value) => playerOName = value,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                if (playerXName.isNotEmpty && playerOName.isNotEmpty) {
-                  controller.setPlayerNames(playerXName, playerOName);
-                  Get.back();
-                } else {
-                  Get.snackbar(
-                    'Error',
-                    'Both names must be provided!',
-                    snackPosition: SnackPosition.BOTTOM,
-                  );
-                }
-              },
-              child: const Text('Start Game'),
-            ),
-          ],
-        );
-      },
+  Future<void> botMove() async {
+    Get.snackbar(
+      '',
+      'Bot is thinking...',
+      snackPosition: SnackPosition.BOTTOM,
+      titleText: const SizedBox.shrink(),
+      colorText: Colors.white,
+      duration: const Duration(seconds: 2),
     );
+
+    update();
+
+    int? move;
+    await Future.delayed(const Duration(seconds: 2));
+
+    move = findBestMove(currentPlayer.value);
+    if (move != null) {
+      board[move] = currentPlayer.value;
+      if (checkWinner(currentPlayer.value)) {
+        winner.value = currentPlayer.value;
+      } else {
+        winner.value = null;
+        currentPlayer.value = 'X';
+      }
+      update();
+      return;
+    }
+
+    String opponent = currentPlayer.value == 'X' ? 'O' : 'X';
+    move = findBestMove(opponent);
+    if (move != null) {
+      board[move] = currentPlayer.value;
+      winner.value = null;
+      currentPlayer.value = 'X';
+      update();
+      return;
+    }
+
+    if (board[4].isEmpty) {
+      board[4] = currentPlayer.value;
+      winner.value = null;
+      currentPlayer.value = 'X';
+      update();
+      return;
+    }
+
+    List<int> corners = [0, 2, 6, 8];
+    move =
+        corners.firstWhere((index) => board[index].isEmpty, orElse: () => -1);
+    if (move != -1) {
+      board[move] = currentPlayer.value;
+      winner.value = null;
+      currentPlayer.value = 'X';
+      update();
+      return;
+    }
+
+    move = board.indexWhere((cell) => cell.isEmpty);
+    if (move != -1) {
+      board[move] = currentPlayer.value;
+      winner.value = null;
+      currentPlayer.value = 'X';
+      update();
+    }
+  }
+
+  int? findBestMove(String player) {
+    for (var pattern in winPatterns) {
+      int count = 0;
+      int emptyIndex = -1;
+      for (var index in pattern) {
+        if (board[index] == player) {
+          count++;
+        } else if (board[index].isEmpty) {
+          emptyIndex = index;
+        }
+      }
+      if (count == 2 && emptyIndex != -1) {
+        return emptyIndex;
+      }
+    }
+    return null;
   }
 
   void resetGame() {
@@ -102,5 +138,22 @@ class TicTacToeController extends GetxController {
     currentPlayer.value = 'X';
     winner.value = null;
     update();
+  }
+
+  void showPlayerNameDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return PlayerNamePopup(
+          onSubmit: (playerX, playerO, isBot) {
+            playerXName = playerX;
+            playerOName = playerO;
+            isBotPlaying = isBot;
+            update();
+          },
+        );
+      },
+    );
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'controller/tic_tac_toe.dart';
-import 'ui/tic_tac_toe.dart';
+import 'controller/controller.dart';
+import 'ui/game_screen.dart';
 
 void main() {
   Get.lazyPut(() => TicTacToeController());

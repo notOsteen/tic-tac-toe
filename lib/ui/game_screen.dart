@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:confetti/confetti.dart';
-import 'package:tic_tac/controller/tic_tac_toe.dart';
+import 'package:tic_tac/controller/controller.dart';
 
 class TicTacToeScreen extends StatefulWidget {
   const TicTacToeScreen({super.key});
@@ -148,14 +148,11 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
                           onPressed: () => controller.resetGame(context),
                           child: const Text('Restart Game'),
                         ),
-                        if (!controller.isBotPlaying ||
-                            !controller.isBotThinking) ...[
-                          const SizedBox(width: 16),
-                          ElevatedButton(
-                            onPressed: controller.useUndo,
-                            child: const Text('Undo'),
-                          ),
-                        ],
+                        const SizedBox(width: 16),
+                        ElevatedButton(
+                          onPressed: controller.useUndo,
+                          child: const Text('Undo'),
+                        ),
                       ],
                     ),
                   ],

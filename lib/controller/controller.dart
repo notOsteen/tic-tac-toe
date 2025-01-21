@@ -35,7 +35,7 @@ class TicTacToeController extends GetxController {
     if ((currentPlayer.value == 'X' && playerXUndoUsed.value) ||
         (currentPlayer.value == 'O' && playerOUndoUsed.value)) {
       String playerName =
-          currentPlayer.value == 'X' ? playerOName : playerXName;
+          currentPlayer.value == 'X' ? playerXName : playerOName;
       Get.snackbar('Undo Disabled', '$playerName has already used undo.');
       return;
     }

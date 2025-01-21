@@ -60,7 +60,7 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
                   (constraints.maxWidth < constraints.maxHeight
                           ? constraints.maxWidth
                           : constraints.maxHeight) *
-                      0.6;
+                      0.8;
               final double cellSize = gridSize / 3;
 
               return Center(
@@ -148,11 +148,13 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
                           onPressed: () => controller.resetGame(context),
                           child: const Text('Restart Game'),
                         ),
-                        const SizedBox(width: 16),
-                        ElevatedButton(
-                          onPressed: controller.useUndo,
-                          child: const Text('Undo'),
-                        ),
+                        if (controller.winner.value == null) ...[
+                          const SizedBox(width: 16),
+                          ElevatedButton(
+                            onPressed: controller.useUndo,
+                            child: const Text('Undo'),
+                          ),
+                        ],
                       ],
                     ),
                   ],

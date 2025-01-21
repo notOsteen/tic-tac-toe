@@ -26,9 +26,10 @@ class TicTacToeController extends GetxController {
   ];
 
   Future<void> useUndo() async {
+    if (winner.value == null) {
+      return;
+    }
     if (isBotPlaying && isBotThinking) {
-      Get.snackbar(
-          'Undo Disabled', 'You cannot undo while the bot is playing!');
       return;
     }
 
